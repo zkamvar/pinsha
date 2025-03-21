@@ -17,3 +17,5 @@ Config/testthat/edition: 3
 Imports: 
     fs,
     gh
+URL: https://github.com/zkamvar/pinsha
+BugReports: https://github.com/zkamvar/pinsha/issues
