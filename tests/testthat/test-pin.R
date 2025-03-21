@@ -29,7 +29,7 @@ test_that("pin_find_actions() will find all of the actions in the workflow", {
 })
 
 
-test_that("pin_all_workflows() will pin all workflows", {
+test_that("pin() will pin all workflows", {
   local_mocked_bindings(
     pin_action = function(action) {
       pin <- "14a7e741c1cb130261263aa1593718ba42cf443b #v2.11.2"
@@ -38,7 +38,7 @@ test_that("pin_all_workflows() will pin all workflows", {
   )
   temp <- withr::local_tempdir()
   file.copy(test_path("testdata"), temp, recursive = TRUE)
-  pin_all_workflows(file.path(temp, "testdata"), write = TRUE)
+  pin(file.path(temp, "testdata"), write = TRUE)
   old <- readLines(test_path("testdata", "R-CMD-check.yaml"))
   new <- readLines(file.path(temp, "testdata", "R-CMD-check.yaml"))
   expect_failure(expect_equal(old, new))
