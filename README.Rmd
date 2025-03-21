@@ -35,6 +35,7 @@ This will take a github action string and replace the floating tag with an SHA
 so that you can harden the security of your github actions.
 
 ```{r pin_action}
+library("pinsha")
 pin_action("r-lib/actions/check-r-package@v2")
 pin_action("JamesIves/github-pages-deploy-action@v4.7.3")
 ```
