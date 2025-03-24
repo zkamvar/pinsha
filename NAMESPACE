@@ -2,3 +2,6 @@
 
 export(pin)
 export(pin_action)
+export(pin_action_workflow)
+export(pin_find_actions)
+importFrom(gh,gh)

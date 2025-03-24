@@ -16,6 +16,7 @@ Suggests:
 Config/testthat/edition: 3
 Imports: 
     fs,
-    gh
+    gh,
+    memoise
 URL: https://github.com/zkamvar/pinsha
 BugReports: https://github.com/zkamvar/pinsha/issues

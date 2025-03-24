@@ -8,6 +8,14 @@
 \description{
 Harden your 'GitHub' workflow security by pinning your third-party actions to the appropriate 'SHA'.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/zkamvar/pinsha}
+  \item Report bugs at \url{https://github.com/zkamvar/pinsha/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: Zhian N. Kamvar \email{zkamvar@gmail.com} (\href{https://orcid.org/0000-0003-1458-7108}{ORCID})
 

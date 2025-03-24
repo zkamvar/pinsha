@@ -20,7 +20,10 @@ nothing. Used for its side-effect
 Automatically pin all actions to their expected hashes in your GitHub workflows
 }
 \examples{
-\dontrun{
-  pin()
-}
+\dontshow{if (requireNamespace("withr", silently = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+tmp <- withr::local_tempdir()
+fs::dir_copy(system.file("workflows", package = "pinsha"), tmp)
+
+pin()
+\dontshow{\}) # examplesIf}
 }
