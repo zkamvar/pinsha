@@ -43,7 +43,15 @@ pin_action("JamesIves/github-pages-deploy-action@v4.7.3")
 To update all of the actions in your workflows, you can use the `pin()` command
 from the root of your repository.
 
-```{r example, eval = FALSE}
-pinsha::pin()
+```{r example}
+# Actions in standard workflows
+workflows <- system.file("workflows", package = "pinsha")
+pin_find_actions(workflows)
+
+# pin() transforms all of the actions to use hashes
+tmp <- tempfile()
+fs::dir_copy(workflows, tmp)
+pin(tmp, write = TRUE)
+pin_find_actions(tmp)
 ```
 
