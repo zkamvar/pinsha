@@ -17,9 +17,12 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 <!-- badges: end -->
+GitHub [recommends to pin third-party actions to a full-length commit SHA](https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions#using-third-party-actions)
+to prevent supply-chain attacks. Paring this strategy with [automated actions updates from depandabot](https://docs.github.com/en/code-security/dependabot/working-with-dependabot/keeping-your-actions-up-to-date-with-dependabot), also
+helps protect you from security exploits in out-dated actions.
 
-The goal of pinsha is to provide an easy way to pin the actions in your github
-workflows. 
+The goal of {pinsha} is to provide an easy way to pin the actions in your github
+workflows.
 
 ## Installation
 
@@ -59,4 +62,5 @@ fs::dir_copy(workflows, tmp)
 pin(tmp, write = TRUE)
 pin_find_actions(tmp)
 ```
+
 
