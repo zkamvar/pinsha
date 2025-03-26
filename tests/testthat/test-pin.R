@@ -38,6 +38,14 @@ test_that("pin_action() works for an individual action", {
   expect_equal(res, expected)
 })
 
+
+test_that("pin_action() will return the latest release", {
+  skip_if_offline()
+  res <- pin_action("r-lib/actions/check-r-package")
+  expect_match(res, "r-lib/actions/check-r-package[@][a-z0-9]{40} [#]v[0-9.]+?")
+})
+
+
 test_that("pin_action_workflow() will update an individual workflow", {
   pin <- "r-lib/actions/check-r-package@14a7e741c1cb130261263aa1593718ba42cf443b #v2.11.2"
   action <- "r-lib/actions/check-r-package@v2.11.2"
