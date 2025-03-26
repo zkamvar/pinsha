@@ -100,10 +100,12 @@ pin_find_actions <- function(workflow = ".github/workflows/R-CMD-check.yaml", in
 #' @return a character vector of the workflow file with the actions replaced.
 #' @export
 #' @examplesIf requireNamespace("withr", silently = TRUE)
-#' pkgdown <- withr::local_tempfile()
+#' pkgdown <- withr::local_tempdir()
 #' fs::file_copy(system.file("workflows", "pkgdown.yaml", package = "pinsha"), pkgdown)
 #' actions <- pin_find_actions(pkgdown)
+#' actions
 #' for (action in actions) pin_action_workflow(action, workflow = pkgdown, write = TRUE)
+#' pin_find_actions(pkgdown)
 pin_action_workflow <- function(action = "r-lib/actions/check-r-package@v2", replacement = NULL, workflow = ".github/workflows/R-CMD-check.yaml", write = FALSE) {
   lines <- readLines(workflow)
   if (is.null(replacement)) {
@@ -125,9 +127,11 @@ pin_action_workflow <- function(action = "r-lib/actions/check-r-package@v2", rep
 #' @return nothing. Used for its side-effect
 #' @examplesIf requireNamespace("withr", silently = TRUE)
 #' tmp <- withr::local_tempdir()
-#' fs::dir_copy(system.file("workflows", package = "pinsha"), tmp)
-#' 
-#' pin()
+#' workflows <- fs::path(tmp, ".github", "workflows")
+#' fs::dir_copy(system.file("workflows", package = "pinsha"), workflows)
+#' withr::with_dir(tmp, pin_find_actions(".github/workflows"))
+#' withr::with_dir(tmp, pin(write = TRUE))
+#' withr::with_dir(tmp, pin_find_actions(".github/workflows"))
 pin <- function(workflows = ".github/workflows", include_official = FALSE, write = FALSE) {
   workflows <- fs::dir_ls(workflows, glob = "*.y*ml")
   actions <- unique(unlist(lapply(workflows, pin_find_actions), use.names = FALSE))

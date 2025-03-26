@@ -42,6 +42,32 @@ pin_action("docker/login-action")
 #> [1] "docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772 #v3.4.0"
 ```
 
+#### Memoization
+
+Note that the `pin_action()` function and the `gh()` functions are
+memoized, so you aren’t charged for duplicate calls to the same
+repository:
+
+``` r
+gh::gh_rate_limit()$remaining
+#> [1] 4838
+# memoized pin_action: no new API calls
+pin_action("r-lib/actions/check-r-package@v2")
+#> [1] "r-lib/actions/check-r-package@bd49c52ffe281809afa6f0fecbf37483c5dd0b93 #v2.11.3"
+gh::gh_rate_limit()$remaining
+#> [1] 4838
+# memoized gh calls: no new API calls for different action in same repo
+pin_action("r-lib/actions/setup-r@v2")
+#> [1] "r-lib/actions/setup-r@bd49c52ffe281809afa6f0fecbf37483c5dd0b93 #v2.11.3"
+gh::gh_rate_limit()$remaining
+#> [1] 4838
+# pin action with new repo: two API calls
+pin_action("codecov/codecov-action@v5")
+#> [1] "codecov/codecov-action@0565863a31f2c772f9f0395002a31e3f06189574 #v5.4.0"
+gh::gh_rate_limit()$remaining
+#> [1] 4836
+```
+
 ### Scan your files for actions used
 
 You can find all of the third-party actions used with
@@ -51,19 +77,19 @@ You can find all of the third-party actions used with
 # Actions in standard workflows
 workflows <- system.file("workflows", package = "pinsha")
 pin_find_actions(workflows)
-#> $`/private/var/folders/9p/m996p3_55hjf1hc62552cqfr0000gr/T/RtmpXLywfp/temp_libpath16ea4e30ecc/pinsha/workflows/R-CMD-check.yaml`
+#> $`/private/var/folders/9p/m996p3_55hjf1hc62552cqfr0000gr/T/RtmpuQB6F2/temp_libpathee03692b69d/pinsha/workflows/R-CMD-check.yaml`
 #> [1] "r-lib/actions/setup-pandoc@v2"        
 #> [2] "r-lib/actions/setup-r@v2"             
 #> [3] "r-lib/actions/setup-r-dependencies@v2"
 #> [4] "r-lib/actions/check-r-package@v2"     
 #> 
-#> $`/private/var/folders/9p/m996p3_55hjf1hc62552cqfr0000gr/T/RtmpXLywfp/temp_libpath16ea4e30ecc/pinsha/workflows/pkdown.yaml`
+#> $`/private/var/folders/9p/m996p3_55hjf1hc62552cqfr0000gr/T/RtmpuQB6F2/temp_libpathee03692b69d/pinsha/workflows/pkgdown.yaml`
 #> [1] "r-lib/actions/setup-pandoc@v2"              
 #> [2] "r-lib/actions/setup-r@v2"                   
 #> [3] "r-lib/actions/setup-r-dependencies@v2"      
 #> [4] "JamesIves/github-pages-deploy-action@v4.5.0"
 #> 
-#> $`/private/var/folders/9p/m996p3_55hjf1hc62552cqfr0000gr/T/RtmpXLywfp/temp_libpath16ea4e30ecc/pinsha/workflows/test-coverage.yaml`
+#> $`/private/var/folders/9p/m996p3_55hjf1hc62552cqfr0000gr/T/RtmpuQB6F2/temp_libpathee03692b69d/pinsha/workflows/test-coverage.yaml`
 #> [1] "r-lib/actions/setup-r@v2"             
 #> [2] "r-lib/actions/setup-r-dependencies@v2"
 #> [3] "codecov/codecov-action@v5"
@@ -72,29 +98,69 @@ pin_find_actions(workflows)
 ### Update actions
 
 To update all of the actions in your workflows, you can use the `pin()`
-command from the root of your repository. Here, I am demonstrating on a
-temporary copy of the directory:
+command from the root of your repository.
 
 ``` r
-# pin() transforms all of the actions to use hashes
-tmp <- tempfile()
-fs::dir_copy(workflows, tmp)
-pin(tmp, write = TRUE)
-pin_find_actions(tmp)
-#> $`/var/folders/9p/m996p3_55hjf1hc62552cqfr0000gr/T/RtmpnO6iD5/file16f196a15ecc2/R-CMD-check.yaml`
-#> [1] "r-lib/actions/setup-pandoc@bd49c52ffe281809afa6f0fecbf37483c5dd0b93 #v2.11.3"        
-#> [2] "r-lib/actions/setup-r@bd49c52ffe281809afa6f0fecbf37483c5dd0b93 #v2.11.3"             
-#> [3] "r-lib/actions/setup-r-dependencies@bd49c52ffe281809afa6f0fecbf37483c5dd0b93 #v2.11.3"
-#> [4] "r-lib/actions/check-r-package@bd49c52ffe281809afa6f0fecbf37483c5dd0b93 #v2.11.3"     
+# setup
+tmp <- withr::local_tempdir()
+usethis::create_package(tmp, open = TRUE)
+#> ✔ Setting active project to
+#>   "/private/var/folders/9p/m996p3_55hjf1hc62552cqfr0000gr/T/Rtmp2F5WGk/filef543fb45d27".
+#> ✔ Creating 'R/'.
+#> ✔ Writing 'DESCRIPTION'.
+#> Package: filef543fb45d27
+#> Title: What the Package Does (One Line, Title Case)
+#> Version: 0.0.0.9000
+#> Authors@R (parsed):
+#>     * First Last <first.last@example.com> [aut, cre]
+#> Description: What the package does (one paragraph).
+#> License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
+#>     license
+#> Encoding: UTF-8
+#> Roxygen: list(markdown = TRUE)
+#> RoxygenNote: 7.3.2
+#> ✔ Writing 'NAMESPACE'.
+usethis::use_git()
+#> ✔ Initialising Git repo.
+#> ✔ Adding ".Rproj.user", ".Rhistory", ".Rdata", ".httr-oauth", ".DS_Store", and
+#>   ".quarto" to '.gitignore'.
+usethis::use_github_action("pkgdown")
+#> ✔ Creating '.github/'.
+#> ✔ Adding "^\\.github$" to '.Rbuildignore'.
+#> ✔ Adding "*.html" to '.github/.gitignore'.
+#> ✔ Creating '.github/workflows/'.
+#> ✔ Saving "r-lib/actions/examples/pkgdown.yaml@v2" to
+#>   '.github/workflows/pkgdown.yaml'.
+#> ☐ Learn more at <https://github.com/r-lib/actions/blob/v2/examples/README.md>.
+usethis::use_github_action("lint")
+#> ✔ Saving "r-lib/actions/examples/lint.yaml@v2" to
+#>   '.github/workflows/lint.yaml'.
+#> ☐ Learn more at <https://github.com/r-lib/actions/blob/v2/examples/README.md>.
+
+# all the actions are unpinned
+pin_find_actions(".github/workflows")
+#> $`.github/workflows/lint.yaml`
+#> [1] "r-lib/actions/setup-r@v2"             
+#> [2] "r-lib/actions/setup-r-dependencies@v2"
 #> 
-#> $`/var/folders/9p/m996p3_55hjf1hc62552cqfr0000gr/T/RtmpnO6iD5/file16f196a15ecc2/pkdown.yaml`
+#> $`.github/workflows/pkgdown.yaml`
+#> [1] "r-lib/actions/setup-pandoc@v2"              
+#> [2] "r-lib/actions/setup-r@v2"                   
+#> [3] "r-lib/actions/setup-r-dependencies@v2"      
+#> [4] "JamesIves/github-pages-deploy-action@v4.5.0"
+
+# pin() transforms all of the actions to use hashes
+pin(write = TRUE)
+
+# now they are all pinned
+pin_find_actions(".github/workflows")
+#> $`.github/workflows/lint.yaml`
+#> [1] "r-lib/actions/setup-r@bd49c52ffe281809afa6f0fecbf37483c5dd0b93 #v2.11.3"             
+#> [2] "r-lib/actions/setup-r-dependencies@bd49c52ffe281809afa6f0fecbf37483c5dd0b93 #v2.11.3"
+#> 
+#> $`.github/workflows/pkgdown.yaml`
 #> [1] "r-lib/actions/setup-pandoc@bd49c52ffe281809afa6f0fecbf37483c5dd0b93 #v2.11.3"         
 #> [2] "r-lib/actions/setup-r@bd49c52ffe281809afa6f0fecbf37483c5dd0b93 #v2.11.3"              
 #> [3] "r-lib/actions/setup-r-dependencies@bd49c52ffe281809afa6f0fecbf37483c5dd0b93 #v2.11.3" 
 #> [4] "JamesIves/github-pages-deploy-action@65b5dfd4f5bcd3a7403bbc2959c144256167464e #v4.5.0"
-#> 
-#> $`/var/folders/9p/m996p3_55hjf1hc62552cqfr0000gr/T/RtmpnO6iD5/file16f196a15ecc2/test-coverage.yaml`
-#> [1] "r-lib/actions/setup-r@bd49c52ffe281809afa6f0fecbf37483c5dd0b93 #v2.11.3"             
-#> [2] "r-lib/actions/setup-r-dependencies@bd49c52ffe281809afa6f0fecbf37483c5dd0b93 #v2.11.3"
-#> [3] "codecov/codecov-action@0565863a31f2c772f9f0395002a31e3f06189574 #v5.4.0"
 ```

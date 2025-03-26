@@ -22,8 +22,10 @@ Automatically pin all actions to their expected hashes in your GitHub workflows
 \examples{
 \dontshow{if (requireNamespace("withr", silently = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 tmp <- withr::local_tempdir()
-fs::dir_copy(system.file("workflows", package = "pinsha"), tmp)
-
-pin()
+workflows <- fs::path(tmp, ".github", "workflows")
+fs::dir_copy(system.file("workflows", package = "pinsha"), workflows)
+withr::with_dir(tmp, pin_find_actions(".github/workflows"))
+withr::with_dir(tmp, pin(write = TRUE))
+withr::with_dir(tmp, pin_find_actions(".github/workflows"))
 \dontshow{\}) # examplesIf}
 }

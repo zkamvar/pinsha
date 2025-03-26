@@ -32,9 +32,11 @@ Pin a third-party action in a workflow
 }
 \examples{
 \dontshow{if (requireNamespace("withr", silently = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-pkgdown <- withr::local_tempfile()
+pkgdown <- withr::local_tempdir()
 fs::file_copy(system.file("workflows", "pkgdown.yaml", package = "pinsha"), pkgdown)
 actions <- pin_find_actions(pkgdown)
+actions
 for (action in actions) pin_action_workflow(action, workflow = pkgdown, write = TRUE)
+pin_find_actions(pkgdown)
 \dontshow{\}) # examplesIf}
 }
