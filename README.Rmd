@@ -32,7 +32,9 @@ You can install the development version of pinsha like so:
 pak::pak("zkamvar/pinsha")
 ```
 
-## Example
+## Examples
+
+### Find SHA for any given action
 
 This will take a github action string and replace the floating tag with an SHA
 so that you can harden the security of your github actions.
@@ -41,7 +43,10 @@ so that you can harden the security of your github actions.
 library("pinsha")
 pin_action("r-lib/actions/check-r-package@v2")
 pin_action("JamesIves/github-pages-deploy-action@v4.7.3")
+pin_action("docker/login-action")
 ```
+
+### Scan your files for actions used
 
 You can find all of the third-party actions used with `pin_find_actions()`
 
@@ -50,6 +55,8 @@ You can find all of the third-party actions used with `pin_find_actions()`
 workflows <- system.file("workflows", package = "pinsha")
 pin_find_actions(workflows)
 ```
+
+### Update actions
 
 To update all of the actions in your workflows, you can use the `pin()` command
 from the root of your repository. Here, I am demonstrating on a temporary

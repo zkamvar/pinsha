@@ -18,5 +18,8 @@ the sha belongs to (this may be different than the tag if you use a floating tag
 Pin an individual action to its corresponding SHA
 }
 \examples{
+# pin a specific release
 pin_action("r-lib/actions/check-r-package@v2")
+# pin the latest release
+pin_action("docker/login-action")
 }
