@@ -6,12 +6,25 @@
 #'   the sha belongs to (this may be different than the tag if you use a floating tag)
 #' @export
 #' @examples
+#' # pin a specific release
 #' pin_action("r-lib/actions/check-r-package@v2")
+#' # pin the latest release
+#' pin_action("docker/login-action")
 pin_action <- function(action = "r-lib/actions/check-r-package@v2") {
   act <- parse_action(action)
   # Make sure we aren't going in loops
   if (looks_like_sha(act$ref)) {
     return(action)
+  }
+  # No ref will fetch the latest release or tag
+  if (length(act$ref) == 1 && is.na(act$ref)) {
+    act$ref <- tryCatch({
+        gh("GET /repos/{repo}/releases", repo = act$repo)[[1]]$tag_name
+      },
+      http_error_404 = function(e) {
+        gh("GET /repos/{repo}/tags", repo = act$repo)[[1]]$name
+      }
+    )
   }
   # attempt to fetch the SHA from the current tag
   sha <- tryCatch({
@@ -47,24 +60,6 @@ pin_action <- function(action = "r-lib/actions/check-r-package@v2") {
     vtag <- act$ref
   }
   sprintf("%s@%s #%s", act$full, sha, vtag)
-}
-
-looks_like_sha <- function(sha) {
-  grepl("^[a-fA-F0-9]{7,40}$", sha)
-}
-
-parse_action <- function(action) {
-  parts <- strsplit(action, "/")[[1]]
-  repo <- sub("[@].*", "", sprintf("%s/%s", parts[1], parts[2]))
-  action_version <- strsplit(parts[length(parts)], "@")[[1]]
-  if (length(parts) > 2) {
-    full <- sprintf("%s/%s", repo, action_version[1])
-  } else {
-    full <- repo
-  }
-
-  ref <- sub("\\s*[#].*$", "", action_version[2])
-  list(full = full, repo = repo, ref = ref)
 }
 
 #' Find GitHub actions used in a workflow file
