@@ -61,36 +61,49 @@
 <code class="sourceCode R"><span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"zkamvar/pinsha"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
+<h2 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a>
 </h2>
+<div class="section level3">
+<h3 id="find-sha-for-any-given-action">Find SHA for any given action<a class="anchor" aria-label="anchor" href="#find-sha-for-any-given-action"></a>
+</h3>
 <p>This will take a github action string and replace the floating tag with an SHA so that you can harden the security of your github actions.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/zkamvar/pinsha" class="external-link">"pinsha"</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/pin_action.html">pin_action</a></span><span class="op">(</span><span class="st">"r-lib/actions/check-r-package@v2"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "r-lib/actions/check-r-package@bd49c52ffe281809afa6f0fecbf37483c5dd0b93 #v2.11.3"</span></span>
 <span><span class="fu"><a href="reference/pin_action.html">pin_action</a></span><span class="op">(</span><span class="st">"JamesIves/github-pages-deploy-action@v4.7.3"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "JamesIves/github-pages-deploy-action@6c2d9db40f9296374acc17b90404b6e8864128c8 #v4.7.3"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "JamesIves/github-pages-deploy-action@6c2d9db40f9296374acc17b90404b6e8864128c8 #v4.7.3"</span></span>
+<span><span class="fu"><a href="reference/pin_action.html">pin_action</a></span><span class="op">(</span><span class="st">"docker/login-action"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772 #v3.4.0"</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="scan-your-files-for-actions-used">Scan your files for actions used<a class="anchor" aria-label="anchor" href="#scan-your-files-for-actions-used"></a>
+</h3>
 <p>You can find all of the third-party actions used with <code><a href="reference/pin_find_actions.html">pin_find_actions()</a></code></p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Actions in standard workflows</span></span>
 <span><span class="va">workflows</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"workflows"</span>, package <span class="op">=</span> <span class="st">"pinsha"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/pin_find_actions.html">pin_find_actions</a></span><span class="op">(</span><span class="va">workflows</span><span class="op">)</span></span>
-<span><span class="co">#&gt; $`/private/var/folders/9p/m996p3_55hjf1hc62552cqfr0000gr/T/RtmpWeOjbz/temp_libpath87635c6ec38d/pinsha/workflows/R-CMD-check.yaml`</span></span>
+<span><span class="co">#&gt; $`/private/var/folders/9p/m996p3_55hjf1hc62552cqfr0000gr/T/RtmpXLywfp/temp_libpath16ea4e30ecc/pinsha/workflows/R-CMD-check.yaml`</span></span>
 <span><span class="co">#&gt; [1] "r-lib/actions/setup-pandoc@v2"        </span></span>
 <span><span class="co">#&gt; [2] "r-lib/actions/setup-r@v2"             </span></span>
 <span><span class="co">#&gt; [3] "r-lib/actions/setup-r-dependencies@v2"</span></span>
 <span><span class="co">#&gt; [4] "r-lib/actions/check-r-package@v2"     </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $`/private/var/folders/9p/m996p3_55hjf1hc62552cqfr0000gr/T/RtmpWeOjbz/temp_libpath87635c6ec38d/pinsha/workflows/pkdown.yaml`</span></span>
+<span><span class="co">#&gt; $`/private/var/folders/9p/m996p3_55hjf1hc62552cqfr0000gr/T/RtmpXLywfp/temp_libpath16ea4e30ecc/pinsha/workflows/pkdown.yaml`</span></span>
 <span><span class="co">#&gt; [1] "r-lib/actions/setup-pandoc@v2"              </span></span>
 <span><span class="co">#&gt; [2] "r-lib/actions/setup-r@v2"                   </span></span>
 <span><span class="co">#&gt; [3] "r-lib/actions/setup-r-dependencies@v2"      </span></span>
 <span><span class="co">#&gt; [4] "JamesIves/github-pages-deploy-action@v4.5.0"</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $`/private/var/folders/9p/m996p3_55hjf1hc62552cqfr0000gr/T/RtmpWeOjbz/temp_libpath87635c6ec38d/pinsha/workflows/test-coverage.yaml`</span></span>
+<span><span class="co">#&gt; $`/private/var/folders/9p/m996p3_55hjf1hc62552cqfr0000gr/T/RtmpXLywfp/temp_libpath16ea4e30ecc/pinsha/workflows/test-coverage.yaml`</span></span>
 <span><span class="co">#&gt; [1] "r-lib/actions/setup-r@v2"             </span></span>
 <span><span class="co">#&gt; [2] "r-lib/actions/setup-r-dependencies@v2"</span></span>
 <span><span class="co">#&gt; [3] "codecov/codecov-action@v5"</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="update-actions">Update actions<a class="anchor" aria-label="anchor" href="#update-actions"></a>
+</h3>
 <p>To update all of the actions in your workflows, you can use the <code><a href="reference/pin.html">pin()</a></code> command from the root of your repository. Here, I am demonstrating on a temporary copy of the directory:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># pin() transforms all of the actions to use hashes</span></span>
@@ -98,22 +111,23 @@
 <span><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/copy.html" class="external-link">dir_copy</a></span><span class="op">(</span><span class="va">workflows</span>, <span class="va">tmp</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/pin.html">pin</a></span><span class="op">(</span><span class="va">tmp</span>, write <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/pin_find_actions.html">pin_find_actions</a></span><span class="op">(</span><span class="va">tmp</span><span class="op">)</span></span>
-<span><span class="co">#&gt; $`/var/folders/9p/m996p3_55hjf1hc62552cqfr0000gr/T/RtmpYqa6n6/file87e853ecf7fa/R-CMD-check.yaml`</span></span>
+<span><span class="co">#&gt; $`/var/folders/9p/m996p3_55hjf1hc62552cqfr0000gr/T/RtmpnO6iD5/file16f196a15ecc2/R-CMD-check.yaml`</span></span>
 <span><span class="co">#&gt; [1] "r-lib/actions/setup-pandoc@bd49c52ffe281809afa6f0fecbf37483c5dd0b93 #v2.11.3"        </span></span>
 <span><span class="co">#&gt; [2] "r-lib/actions/setup-r@bd49c52ffe281809afa6f0fecbf37483c5dd0b93 #v2.11.3"             </span></span>
 <span><span class="co">#&gt; [3] "r-lib/actions/setup-r-dependencies@bd49c52ffe281809afa6f0fecbf37483c5dd0b93 #v2.11.3"</span></span>
 <span><span class="co">#&gt; [4] "r-lib/actions/check-r-package@bd49c52ffe281809afa6f0fecbf37483c5dd0b93 #v2.11.3"     </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $`/var/folders/9p/m996p3_55hjf1hc62552cqfr0000gr/T/RtmpYqa6n6/file87e853ecf7fa/pkdown.yaml`</span></span>
+<span><span class="co">#&gt; $`/var/folders/9p/m996p3_55hjf1hc62552cqfr0000gr/T/RtmpnO6iD5/file16f196a15ecc2/pkdown.yaml`</span></span>
 <span><span class="co">#&gt; [1] "r-lib/actions/setup-pandoc@bd49c52ffe281809afa6f0fecbf37483c5dd0b93 #v2.11.3"         </span></span>
 <span><span class="co">#&gt; [2] "r-lib/actions/setup-r@bd49c52ffe281809afa6f0fecbf37483c5dd0b93 #v2.11.3"              </span></span>
 <span><span class="co">#&gt; [3] "r-lib/actions/setup-r-dependencies@bd49c52ffe281809afa6f0fecbf37483c5dd0b93 #v2.11.3" </span></span>
 <span><span class="co">#&gt; [4] "JamesIves/github-pages-deploy-action@65b5dfd4f5bcd3a7403bbc2959c144256167464e #v4.5.0"</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $`/var/folders/9p/m996p3_55hjf1hc62552cqfr0000gr/T/RtmpYqa6n6/file87e853ecf7fa/test-coverage.yaml`</span></span>
+<span><span class="co">#&gt; $`/var/folders/9p/m996p3_55hjf1hc62552cqfr0000gr/T/RtmpnO6iD5/file16f196a15ecc2/test-coverage.yaml`</span></span>
 <span><span class="co">#&gt; [1] "r-lib/actions/setup-r@bd49c52ffe281809afa6f0fecbf37483c5dd0b93 #v2.11.3"             </span></span>
 <span><span class="co">#&gt; [2] "r-lib/actions/setup-r-dependencies@bd49c52ffe281809afa6f0fecbf37483c5dd0b93 #v2.11.3"</span></span>
 <span><span class="co">#&gt; [3] "codecov/codecov-action@0565863a31f2c772f9f0395002a31e3f06189574 #v5.4.0"</span></span></code></pre></div>
+</div>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
