@@ -19,5 +19,10 @@ Useful links:
 \author{
 \strong{Maintainer}: Zhian N. Kamvar \email{zkamvar@gmail.com} (\href{https://orcid.org/0000-0003-1458-7108}{ORCID})
 
+Other contributors:
+\itemize{
+  \item Becky Sweger \email{bsweger@gmail.com} [contributor]
+}
+
 }
 \keyword{internal}
