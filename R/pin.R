@@ -140,6 +140,8 @@ pin_action_workflow <- function(action = "r-lib/actions/check-r-package@v2", rep
 #' @param workflows the directory to your github workflows
 #' @param include_official when `TRUE`, official github action workflows will also be pinned. Defaults to `FALSE`, meaning that the official workflows will continue to use tags
 #' @param write When `TRUE`, the workflows will be overwritten. Defaults to `FALSE`
+#' @param verbose when `TRUE` (default), write out progress for each file. Set to `FALSE`
+#'   to suppress all but error messages
 #' @export
 #' @return nothing. Used for its side-effect
 #' @examplesIf requireNamespace("withr", silently = TRUE)
@@ -149,14 +151,28 @@ pin_action_workflow <- function(action = "r-lib/actions/check-r-package@v2", rep
 #' withr::with_dir(tmp, pin_find_actions(".github/workflows"))
 #' withr::with_dir(tmp, pin(write = TRUE))
 #' withr::with_dir(tmp, pin_find_actions(".github/workflows"))
-pin <- function(workflows = ".github/workflows", include_official = FALSE, write = FALSE) {
+pin <- function(workflows = ".github/workflows", include_official = FALSE, write = FALSE, verbose = TRUE) {
+  opath <- workflows
   workflows <- fs::dir_ls(workflows, glob = "*.y*ml")
   actions <- unique(unlist(lapply(workflows, pin_find_actions), use.names = FALSE))
   pins <- vapply(actions, pin_action, character(1))
   names(pins) <- actions
+  if (verbose) {
+    n <- length(workflows)
+    cli::cli_alert_info("Found {n} workflow{?s}: {fs::path_rel(workflows, opath)}")
+  }
   for (workflow in workflows) {
-    for (action in actions) {
-      pin_action_workflow(action, pins[action], workflow = workflow, write = write)
+    tryCatch({
+      if (verbose) cli::cli_process_start("Modifying actions in {.val {workflow}}")
+      for (action in actions) {
+        pin_action_workflow(action, pins[action], workflow = workflow, write = write)
+      }
+      if (verbose) cli::cli_process_done()
+    },
+    error = function(err) {
+      if (verbose) cli::cli_process_failed()
+      cli::cli_alert_danger("Failed to modify actions")
     }
+  )
   }
 }

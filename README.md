@@ -25,6 +25,12 @@ You can install the development version of pinsha like so:
 pak::pak("zkamvar/pinsha")
 ```
 
+## Usage
+
+If you have a github repository with workflows that you would like to
+pin actions for, then you can open that repository locally in R and use
+`pinsha::pin(write = TRUE)`. See blow for examples.
+
 ## Examples
 
 ### Find SHA for any given action
@@ -50,22 +56,22 @@ repository:
 
 ``` r
 gh::gh_rate_limit()$remaining
-#> [1] 4838
+#> [1] 4964
 # memoized pin_action: no new API calls
 pin_action("r-lib/actions/check-r-package@v2")
 #> [1] "r-lib/actions/check-r-package@bd49c52ffe281809afa6f0fecbf37483c5dd0b93 #v2.11.3"
 gh::gh_rate_limit()$remaining
-#> [1] 4838
+#> [1] 4964
 # memoized gh calls: no new API calls for different action in same repo
 pin_action("r-lib/actions/setup-r@v2")
 #> [1] "r-lib/actions/setup-r@bd49c52ffe281809afa6f0fecbf37483c5dd0b93 #v2.11.3"
 gh::gh_rate_limit()$remaining
-#> [1] 4838
+#> [1] 4964
 # pin action with new repo: two API calls
 pin_action("codecov/codecov-action@v5")
 #> [1] "codecov/codecov-action@0565863a31f2c772f9f0395002a31e3f06189574 #v5.4.0"
 gh::gh_rate_limit()$remaining
-#> [1] 4836
+#> [1] 4962
 ```
 
 ### Scan your files for actions used
@@ -77,19 +83,19 @@ You can find all of the third-party actions used with
 # Actions in standard workflows
 workflows <- system.file("workflows", package = "pinsha")
 pin_find_actions(workflows)
-#> $`/private/var/folders/9p/m996p3_55hjf1hc62552cqfr0000gr/T/RtmpuQB6F2/temp_libpathee03692b69d/pinsha/workflows/R-CMD-check.yaml`
+#> $`/private/var/folders/9p/m996p3_55hjf1hc62552cqfr0000gr/T/Rtmpb1uSUi/temp_libpath7ef4659f09cd/pinsha/workflows/R-CMD-check.yaml`
 #> [1] "r-lib/actions/setup-pandoc@v2"        
 #> [2] "r-lib/actions/setup-r@v2"             
 #> [3] "r-lib/actions/setup-r-dependencies@v2"
 #> [4] "r-lib/actions/check-r-package@v2"     
 #> 
-#> $`/private/var/folders/9p/m996p3_55hjf1hc62552cqfr0000gr/T/RtmpuQB6F2/temp_libpathee03692b69d/pinsha/workflows/pkgdown.yaml`
+#> $`/private/var/folders/9p/m996p3_55hjf1hc62552cqfr0000gr/T/Rtmpb1uSUi/temp_libpath7ef4659f09cd/pinsha/workflows/pkgdown.yaml`
 #> [1] "r-lib/actions/setup-pandoc@v2"              
 #> [2] "r-lib/actions/setup-r@v2"                   
 #> [3] "r-lib/actions/setup-r-dependencies@v2"      
 #> [4] "JamesIves/github-pages-deploy-action@v4.5.0"
 #> 
-#> $`/private/var/folders/9p/m996p3_55hjf1hc62552cqfr0000gr/T/RtmpuQB6F2/temp_libpathee03692b69d/pinsha/workflows/test-coverage.yaml`
+#> $`/private/var/folders/9p/m996p3_55hjf1hc62552cqfr0000gr/T/Rtmpb1uSUi/temp_libpath7ef4659f09cd/pinsha/workflows/test-coverage.yaml`
 #> [1] "r-lib/actions/setup-r@v2"             
 #> [2] "r-lib/actions/setup-r-dependencies@v2"
 #> [3] "codecov/codecov-action@v5"
@@ -105,10 +111,10 @@ command from the root of your repository.
 tmp <- withr::local_tempdir()
 usethis::create_package(tmp, open = TRUE)
 #> ✔ Setting active project to
-#>   "/private/var/folders/9p/m996p3_55hjf1hc62552cqfr0000gr/T/Rtmp2F5WGk/filef543fb45d27".
+#>   "/private/var/folders/9p/m996p3_55hjf1hc62552cqfr0000gr/T/RtmpvD7kAq/file7f734d1e02c2".
 #> ✔ Creating 'R/'.
 #> ✔ Writing 'DESCRIPTION'.
-#> Package: filef543fb45d27
+#> Package: file7f734d1e02c2
 #> Title: What the Package Does (One Line, Title Case)
 #> Version: 0.0.0.9000
 #> Authors@R (parsed):
@@ -151,6 +157,13 @@ pin_find_actions(".github/workflows")
 
 # pin() transforms all of the actions to use hashes
 pin(write = TRUE)
+#> ℹ Found 2 workflows: 'lint.yaml' and 'pkgdown.yaml'
+#> ℹ Modifying actions in ".github/workflows/lint.yaml"
+#> ✔ Modifying actions in ".github/workflows/lint.yaml" ... done
+#> 
+#> ℹ Modifying actions in ".github/workflows/pkgdown.yaml"
+#> ✔ Modifying actions in ".github/workflows/pkgdown.yaml" ... done
+#> 
 
 # now they are all pinned
 pin_find_actions(".github/workflows")
