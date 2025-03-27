@@ -1,9 +1,10 @@
 Package: pinsha
 Title: Pin 'GitHub' Actions to 'SHA'
 Version: 0.0.0.9000
-Authors@R: 
+Authors@R: c(
     person("Zhian N.", "Kamvar", , "zkamvar@gmail.com", role = c("aut", "cre"),
-           comment = c(ORCID = "0000-0003-1458-7108"))
+           comment = c(ORCID = "0000-0003-1458-7108")),
+    person("Becky", "Sweger", , "bsweger@gmail.com", role = c("ctb")))
 Description: Harden your 'GitHub' workflow security by pinning your third-party
     actions to the appropriate 'SHA'. 
 License: MIT + file LICENSE
