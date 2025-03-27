@@ -4,7 +4,12 @@
 \alias{pin}
 \title{Automatically pin all actions to their expected hashes in your GitHub workflows}
 \usage{
-pin(workflows = ".github/workflows", include_official = FALSE, write = FALSE)
+pin(
+  workflows = ".github/workflows",
+  include_official = FALSE,
+  write = FALSE,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{workflows}{the directory to your github workflows}
@@ -12,6 +17,9 @@ pin(workflows = ".github/workflows", include_official = FALSE, write = FALSE)
 \item{include_official}{when \code{TRUE}, official github action workflows will also be pinned. Defaults to \code{FALSE}, meaning that the official workflows will continue to use tags}
 
 \item{write}{When \code{TRUE}, the workflows will be overwritten. Defaults to \code{FALSE}}
+
+\item{verbose}{when \code{TRUE} (default), write out progress for each file. Set to \code{FALSE}
+to suppress all but error messages}
 }
 \value{
 nothing. Used for its side-effect

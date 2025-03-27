@@ -32,6 +32,12 @@ You can install the development version of pinsha like so:
 pak::pak("zkamvar/pinsha")
 ```
 
+## Usage
+
+If you have a github repository with workflows that you would like to pin
+actions for, then you can open that repository locally in R and use
+`pinsha::pin(write = TRUE)`. See blow for examples.
+
 ## Examples
 
 ### Find SHA for any given action
