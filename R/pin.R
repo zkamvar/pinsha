@@ -32,9 +32,16 @@ pin_action <- function(action = "r-lib/actions/check-r-package@v2") {
         "GET /repos/{repo}/git/refs/tags/{tag}",
         repo = act$repo,
         tag = act$ref
-      )$object$sha
-      class(res) <- "tag"
-      res
+      )
+      type <- res$object$type
+      sha <- res$object$sha
+      # if this is an annotated tag, the sha
+      if (type == "tag") {
+        class(sha) <- "annotated_tag"
+      } else {
+        class(sha) <- "tag"
+      }
+      sha
     },
     http_error_404 = function(e) {
       # If the tag cannot be obtained, then that likely means its a branch
@@ -46,13 +53,23 @@ pin_action <- function(action = "r-lib/actions/check-r-package@v2") {
       res
     })
 
-  # For tags, we need to get the first tag that matches the SHA, which shoud
+  # For lightweigt tags, we need to get the first tag that matches the SHA, which shoud
   # be the official (non-floating) tag.
   if (inherits(sha, "tag")) {
     gh_tags <- gh("GET /repos/{repo}/tags", repo = act$repo)
     for (i in gh_tags) {
       if (i$commit$sha == sha) {
         vtag <- i$name
+        break
+      }
+    }
+  } else if (inherits(sha, "annotated_tag")) {
+    # For annotated tags, match on the tag name (act$ref) to get the commit SHA
+    vtag <- act$ref
+    gh_tags <- gh("GET /repos/{repo}/tags", repo = act$repo)
+    for (i in gh_tags) {
+      if (i$name == vtag) {
+        sha <- i$commit$sha
         break
       }
     }
