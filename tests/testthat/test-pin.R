@@ -45,6 +45,15 @@ test_that("pin_action() will return the latest release", {
   expect_match(res, "r-lib/actions/check-r-package[@][a-z0-9]{40} [#]v[0-9.]+?")
 })
 
+test_that("pin_action() works for an action versioned via an annotated tag", {
+  skip_if_offline()
+  expected <- "nwtgck/actions-netlify@4cbaf4c08f1a7bfa537d6113472ef4424e4eb654 #v3"
+  res <- pin_action("nwtgck/actions-netlify@v3")
+  expect_equal(res, expected)
+
+  # pin action will return early if fed twice:
+  expect_equal(res, pin_action(res))
+})
 
 test_that("pin_action_workflow() will update an individual workflow", {
   pin <- "r-lib/actions/check-r-package@14a7e741c1cb130261263aa1593718ba42cf443b #v2.11.2"
