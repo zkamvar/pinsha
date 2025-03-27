@@ -79,9 +79,11 @@ test_that("pin() will pin all workflows", {
   path <- system.file("workflows", package = "pinsha")
   temp <- withr::local_tempdir()
   file.copy(path, temp, recursive = TRUE)
-  expect_message(pin(file.path(temp, "workflows"), write = TRUE), 
-    "Found 3 workflows"
-  ) |> suppressMessages()
+  suppressMessages({
+    expect_message(pin(file.path(temp, "workflows"), write = TRUE), 
+      "Found 3 workflows"
+    )
+  })
   newpath <- file.path(temp, "workflows", "R-CMD-check.yaml")
   # workflow files are not equal 
   old <- readLines(fs::path(path, "R-CMD-check.yaml"))
