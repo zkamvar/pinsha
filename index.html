@@ -61,6 +61,11 @@
 <code class="sourceCode R"><span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"zkamvar/pinsha"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
+<h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
+</h2>
+<p>If you have a github repository with workflows that you would like to pin actions for, then you can open that repository locally in R and use <code>pinsha::pin(write = TRUE)</code>. See blow for examples.</p>
+</div>
+<div class="section level2">
 <h2 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a>
 </h2>
 <div class="section level3">
@@ -81,22 +86,22 @@
 <p>Note that the <code><a href="reference/pin_action.html">pin_action()</a></code> function and the <code>gh()</code> functions are memoized, so you aren’t charged for duplicate calls to the same repository:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">gh</span><span class="fu">::</span><span class="fu"><a href="https://gh.r-lib.org/reference/gh_rate_limit.html" class="external-link">gh_rate_limit</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">remaining</span></span>
-<span><span class="co">#&gt; [1] 4838</span></span>
+<span><span class="co">#&gt; [1] 4964</span></span>
 <span><span class="co"># memoized pin_action: no new API calls</span></span>
 <span><span class="fu"><a href="reference/pin_action.html">pin_action</a></span><span class="op">(</span><span class="st">"r-lib/actions/check-r-package@v2"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "r-lib/actions/check-r-package@bd49c52ffe281809afa6f0fecbf37483c5dd0b93 #v2.11.3"</span></span>
 <span><span class="fu">gh</span><span class="fu">::</span><span class="fu"><a href="https://gh.r-lib.org/reference/gh_rate_limit.html" class="external-link">gh_rate_limit</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">remaining</span></span>
-<span><span class="co">#&gt; [1] 4838</span></span>
+<span><span class="co">#&gt; [1] 4964</span></span>
 <span><span class="co"># memoized gh calls: no new API calls for different action in same repo</span></span>
 <span><span class="fu"><a href="reference/pin_action.html">pin_action</a></span><span class="op">(</span><span class="st">"r-lib/actions/setup-r@v2"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "r-lib/actions/setup-r@bd49c52ffe281809afa6f0fecbf37483c5dd0b93 #v2.11.3"</span></span>
 <span><span class="fu">gh</span><span class="fu">::</span><span class="fu"><a href="https://gh.r-lib.org/reference/gh_rate_limit.html" class="external-link">gh_rate_limit</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">remaining</span></span>
-<span><span class="co">#&gt; [1] 4838</span></span>
+<span><span class="co">#&gt; [1] 4964</span></span>
 <span><span class="co"># pin action with new repo: two API calls</span></span>
 <span><span class="fu"><a href="reference/pin_action.html">pin_action</a></span><span class="op">(</span><span class="st">"codecov/codecov-action@v5"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "codecov/codecov-action@0565863a31f2c772f9f0395002a31e3f06189574 #v5.4.0"</span></span>
 <span><span class="fu">gh</span><span class="fu">::</span><span class="fu"><a href="https://gh.r-lib.org/reference/gh_rate_limit.html" class="external-link">gh_rate_limit</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">remaining</span></span>
-<span><span class="co">#&gt; [1] 4836</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 4962</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level3">
@@ -107,19 +112,19 @@
 <code class="sourceCode R"><span><span class="co"># Actions in standard workflows</span></span>
 <span><span class="va">workflows</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"workflows"</span>, package <span class="op">=</span> <span class="st">"pinsha"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/pin_find_actions.html">pin_find_actions</a></span><span class="op">(</span><span class="va">workflows</span><span class="op">)</span></span>
-<span><span class="co">#&gt; $`/private/var/folders/9p/m996p3_55hjf1hc62552cqfr0000gr/T/RtmpuQB6F2/temp_libpathee03692b69d/pinsha/workflows/R-CMD-check.yaml`</span></span>
+<span><span class="co">#&gt; $`/private/var/folders/9p/m996p3_55hjf1hc62552cqfr0000gr/T/Rtmpb1uSUi/temp_libpath7ef4659f09cd/pinsha/workflows/R-CMD-check.yaml`</span></span>
 <span><span class="co">#&gt; [1] "r-lib/actions/setup-pandoc@v2"        </span></span>
 <span><span class="co">#&gt; [2] "r-lib/actions/setup-r@v2"             </span></span>
 <span><span class="co">#&gt; [3] "r-lib/actions/setup-r-dependencies@v2"</span></span>
 <span><span class="co">#&gt; [4] "r-lib/actions/check-r-package@v2"     </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $`/private/var/folders/9p/m996p3_55hjf1hc62552cqfr0000gr/T/RtmpuQB6F2/temp_libpathee03692b69d/pinsha/workflows/pkgdown.yaml`</span></span>
+<span><span class="co">#&gt; $`/private/var/folders/9p/m996p3_55hjf1hc62552cqfr0000gr/T/Rtmpb1uSUi/temp_libpath7ef4659f09cd/pinsha/workflows/pkgdown.yaml`</span></span>
 <span><span class="co">#&gt; [1] "r-lib/actions/setup-pandoc@v2"              </span></span>
 <span><span class="co">#&gt; [2] "r-lib/actions/setup-r@v2"                   </span></span>
 <span><span class="co">#&gt; [3] "r-lib/actions/setup-r-dependencies@v2"      </span></span>
 <span><span class="co">#&gt; [4] "JamesIves/github-pages-deploy-action@v4.5.0"</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $`/private/var/folders/9p/m996p3_55hjf1hc62552cqfr0000gr/T/RtmpuQB6F2/temp_libpathee03692b69d/pinsha/workflows/test-coverage.yaml`</span></span>
+<span><span class="co">#&gt; $`/private/var/folders/9p/m996p3_55hjf1hc62552cqfr0000gr/T/Rtmpb1uSUi/temp_libpath7ef4659f09cd/pinsha/workflows/test-coverage.yaml`</span></span>
 <span><span class="co">#&gt; [1] "r-lib/actions/setup-r@v2"             </span></span>
 <span><span class="co">#&gt; [2] "r-lib/actions/setup-r-dependencies@v2"</span></span>
 <span><span class="co">#&gt; [3] "codecov/codecov-action@v5"</span></span></code></pre></div>
@@ -133,10 +138,10 @@
 <span><span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu">withr</span><span class="fu">::</span><span class="fu"><a href="https://withr.r-lib.org/reference/with_tempfile.html" class="external-link">local_tempdir</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu">usethis</span><span class="fu">::</span><span class="fu">create_package</span><span class="op">(</span><span class="va">tmp</span>, open <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; ✔ Setting active project to</span></span>
-<span><span class="co">#&gt;   "/private/var/folders/9p/m996p3_55hjf1hc62552cqfr0000gr/T/Rtmp2F5WGk/filef543fb45d27".</span></span>
+<span><span class="co">#&gt;   "/private/var/folders/9p/m996p3_55hjf1hc62552cqfr0000gr/T/RtmpvD7kAq/file7f734d1e02c2".</span></span>
 <span><span class="co">#&gt; ✔ Creating 'R/'.</span></span>
 <span><span class="co">#&gt; ✔ Writing 'DESCRIPTION'.</span></span>
-<span><span class="co">#&gt; Package: filef543fb45d27</span></span>
+<span><span class="co">#&gt; Package: file7f734d1e02c2</span></span>
 <span><span class="co">#&gt; Title: What the Package Does (One Line, Title Case)</span></span>
 <span><span class="co">#&gt; Version: 0.0.0.9000</span></span>
 <span><span class="co">#&gt; Authors@R (parsed):</span></span>
@@ -179,6 +184,13 @@
 <span></span>
 <span><span class="co"># pin() transforms all of the actions to use hashes</span></span>
 <span><span class="fu"><a href="reference/pin.html">pin</a></span><span class="op">(</span>write <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; ℹ Found 2 workflows: 'lint.yaml' and 'pkgdown.yaml'</span></span>
+<span><span class="co">#&gt; ℹ Modifying actions in ".github/workflows/lint.yaml"</span></span>
+<span><span class="co">#&gt; ✔ Modifying actions in ".github/workflows/lint.yaml" ... done</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ℹ Modifying actions in ".github/workflows/pkgdown.yaml"</span></span>
+<span><span class="co">#&gt; ✔ Modifying actions in ".github/workflows/pkgdown.yaml" ... done</span></span>
+<span><span class="co">#&gt; </span></span>
 <span></span>
 <span><span class="co"># now they are all pinned</span></span>
 <span><span class="fu"><a href="reference/pin_find_actions.html">pin_find_actions</a></span><span class="op">(</span><span class="st">".github/workflows"</span><span class="op">)</span></span>
